@@ -270,13 +270,13 @@ function ProvenResults() {
 // Footer Component
 function Footer() {
   return (
-    <footer className="bg-app-primary text-white py-16 px-8 mt-12">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-        <div>
-          <h3 className="text-2xl font-bold mb-2">Flowblox</h3>
-          <p className="text-sm opacity-60 font-light">Streamlining teamwork since 2026.</p>
+    <footer className="bg-app-primary text-white py-4 sm:py-16 px-4 sm:px-8 mt-2 sm:mt-12">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2 sm:gap-8">
+        <div className="text-center md:text-left">
+          <h3 className="text-base sm:text-2xl font-bold mb-0.5 sm:mb-2">Flowblox</h3>
+          <p className="text-[10px] sm:text-sm opacity-60 font-light">Streamlining teamwork since 2026.</p>
         </div>
-        <div className="flex gap-8 text-sm opacity-80">
+        <div className="flex gap-3 sm:gap-8 text-[10px] sm:text-sm opacity-80">
           <a href="#privacy" className="hover:opacity-100 transition-opacity text-white">Privacy</a>
           <a href="#terms" className="hover:opacity-100 transition-opacity text-white">Terms</a>
           <a href="#github" className="hover:opacity-100 transition-opacity text-white">GitHub</a>

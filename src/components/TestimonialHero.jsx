@@ -34,7 +34,7 @@ function TestimonialHero() {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
 
   return (
-    <section className="w-full flex flex-col items-center text-center pt-24 pb-24 overflow-hidden relative">
+    <section className="w-full flex flex-col items-center text-center pt-12 sm:pt-24 pb-2 sm:pb-24 overflow-hidden relative">
       
       {/* Arch Grid Section - Exact miniature replica of Windows layout on all screens */}
       <div className="relative w-full max-w-[1300px] h-[160px] sm:h-[450px] md:h-[600px] flex justify-between sm:justify-center gap-[2px] sm:gap-4 md:gap-6 px-1 sm:px-4 mx-auto z-10">
