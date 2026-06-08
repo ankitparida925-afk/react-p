@@ -86,7 +86,28 @@ function TeamCarousel() {
     }, 500);
   };
 
-  const baseWidth = typeof window !== 'undefined' ? (window.innerWidth < 640 ? 96 : window.innerWidth < 768 ? 128 : window.innerWidth < 1024 ? 144 : 160) : 160;
+  const [scale, setScale] = useState(1);
+
+  // Calculate perfect proportional scale relative to a 1200px desktop screen
+  useEffect(() => {
+    const handleResize = () => {
+      if (typeof window !== 'undefined') {
+        if (window.innerWidth < 1200) {
+          setScale(window.innerWidth / 1200);
+        } else {
+          setScale(1);
+        }
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Lock math engine exactly to Windows PC desktop size
+  const baseWidth = 160; 
+  const scaleFactor = 1;
+  const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
 
   const getVisualWidth = (d) => {
     const absD = Math.abs(d);
@@ -124,16 +145,17 @@ function TeamCarousel() {
     // Helper to calculate exact X at absolute integer distances
     const getXAtInteger = (dInt) => {
       let x = 0;
+      
       for (let i = 0; i < dInt; i++) {
         let midD = i + 0.5; // Static midpoint for the full integer step
         let w = getVisualWidth(midD);
         
-        let dynamicGap = 4 + (Math.pow(midD, 1.5) * 12);  
+        let dynamicGap = (4 + (Math.pow(midD, 1.5) * 12)) * scaleFactor;  
         if (midD > 2) {
-          dynamicGap += 12;
+          dynamicGap += 12 * scaleFactor;
         }
         if (midD > 3) {
-          dynamicGap += 40;
+          dynamicGap += 40 * scaleFactor;
         }
         
         let screenDist = w + dynamicGap;
@@ -153,9 +175,17 @@ function TeamCarousel() {
   };
 
   return (
-    <div className="w-full overflow-hidden pt-4 pb-12 select-none">
+    <div 
+      className="w-full overflow-hidden pt-4 pb-12 select-none flex justify-center"
+      style={{ height: `${400 * scale + 64}px` }} // Outer wrapper enforces the scaled document flow height (plus 64px for pt-4/pb-12)
+    >
       <div 
-        className="max-w-7xl mx-auto px-4 cursor-grab active:cursor-grabbing"
+        className="cursor-grab active:cursor-grabbing origin-top"
+        style={{ 
+          width: '1200px', 
+          height: '400px', // Inner element remains full desktop size
+          transform: `scale(${scale})`
+        }}
         onMouseDown={(e) => handleStart(e.clientX)}
         onMouseMove={(e) => handleMove(e.clientX)}
         onMouseUp={handleEnd}
@@ -164,7 +194,10 @@ function TeamCarousel() {
         onTouchMove={(e) => handleMove(e.touches[0].clientX)}
         onTouchEnd={handleEnd}
       >
-        <div className="perspective-container relative flex justify-center items-center h-[260px] sm:h-[340px] md:h-[400px]">
+        <div 
+          className="perspective-container relative flex justify-center items-center"
+          style={{ height: '400px' }} // Fixed desktop height
+        >
           {teamMembers.map((member, index) => {
             let diff = index - activeIndex;
             
@@ -188,26 +221,28 @@ function TeamCarousel() {
             // the depths of the middle 3 images without relying on discrete z-index jumps!
             const translateZ = 15 + Math.pow(sizeD, 2) * 12 + (absD * 0.1); 
             const translateX = getExactTranslateX(diff); // Mathematically exact equal spacing
-            const translateY = sizeD * 12;
+            const translateY = sizeD * 12 * scaleFactor; // Scale the vertical drop curve perfectly
             
             // Scaled all images down very slightly (0.75 base)
-            let scale = 0.75 + (sizeD * 0.1); 
+            let scaleFactorTransform = 0.75 + (sizeD * 0.1); 
             // Boost the size of the outermost edge images specifically
             if (sizeD > 3) {
-              scale += (sizeD - 3) * 0.25; 
+              scaleFactorTransform += (sizeD - 3) * 0.25; 
             }
             
             // Hide the card and disable transition when it's at the extreme edge wrapping around
             const isWrapping = absD > 4.2;
 
             const cardStyle = {
+              width: `${baseWidth}px`, // Dynamically sync CSS width with the math engine
               opacity: isWrapping ? 0 : 1,
               pointerEvents: isWrapping ? 'none' : 'auto',
-              transform: `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+              transform: `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scaleFactorTransform})`,
               transformStyle: 'preserve-3d',
-              boxShadow: '0 30px 60px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.3)', // A very strong, highly visible double shadow
+              willChange: 'transform',
+              boxShadow: isMobileDevice ? '0 15px 25px rgba(0, 0, 0, 0.4)' : '0 30px 60px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.3)',
               // ONLY enable CSS transition if the user clicked. Otherwise let JS handle it smoothly
-              transition: isClickAnimating && !isWrapping ? 'all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)' : 'none',
+              transition: isClickAnimating && !isWrapping ? 'transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1)' : 'none',
             };
 
             const isActive = Math.round(activeIndex) === index;
@@ -216,15 +251,15 @@ function TeamCarousel() {
               <div 
                 key={member.id} 
                 onClick={() => handleCardClick(index, member)}
-                className="absolute w-16 sm:w-24 md:w-36 lg:w-40 aspect-[3/4] rounded-2xl sm:rounded-3xl cursor-pointer"
+                className="absolute aspect-[3/4] rounded-2xl sm:rounded-3xl cursor-pointer"
                 style={cardStyle}
               >
                 <div className="relative w-full h-full pointer-events-none">
                   <img 
                     src={member.img} 
                     alt={member.name} 
-                    className={`w-full h-full object-cover rounded-2xl sm:rounded-3xl transition-all duration-500 ${isActive ? 'opacity-100' : 'opacity-90'}`}
-                    style={{ WebkitBoxReflect: 'below 8px linear-gradient(transparent, transparent, rgba(0,0,0,0.3))' }}
+                    className={`w-full h-full object-cover rounded-2xl sm:rounded-3xl transition-opacity duration-500 ${isActive ? 'opacity-100' : 'opacity-90'}`}
+                    style={!isMobileDevice ? { WebkitBoxReflect: 'below 8px linear-gradient(transparent, transparent, rgba(0,0,0,0.3))' } : {}}
                   />
                 </div>
               </div>
@@ -232,7 +267,7 @@ function TeamCarousel() {
           })}
         </div>
 
-        <p className="text-center text-xs text-app-primary/40 mt-6 font-light">
+        <p className="text-center text-xs text-app-primary/40 mt-10 font-light">
           ← Drag to slide the carousel left or right →
         </p>
       </div>

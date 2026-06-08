@@ -55,16 +55,19 @@ function TravelGuide() {
         </div>
       </div>
 
-      {/* Right 5-Card Capsules */}
-      <div className="lg:w-2/3 w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-8 overflow-visible">
+      {/* Right 5-Card Capsules - Perfect 5-column layout on all screens */}
+      <div className="lg:w-2/3 w-full flex justify-between gap-2 sm:gap-8 pb-8">
         {guides.map((guide, index) => (
           <div 
             key={guide.id} 
-            className={`flex flex-col items-center ${index % 2 === 0 ? 'animate-slide-up-entry' : 'animate-slide-down-entry'}`}
-            style={{ animationDelay: `${index * 150}ms` }}
+            className="flex-1 flex flex-col items-center"
           >
-            {/* Wrapper for capsule and badge to allow badge to spill outside */}
-            <div className="relative w-full">
+            <div 
+              className={`w-full flex flex-col items-center ${index % 2 === 0 ? 'animate-slide-up-entry' : 'animate-slide-down-entry'}`}
+              style={{ animationDelay: `${index * 150}ms` }}
+            >
+              {/* Wrapper for capsule and badge to allow badge to spill outside */}
+              <div className="relative w-full">
               {/* Curved U-Shape Capsule (Curved top, rounded bottom) */}
               <div className="w-full aspect-[1/3.2] rounded-full overflow-hidden bg-white group shadow-sm hover:shadow-md transition-shadow">
                 <img 
@@ -74,15 +77,16 @@ function TravelGuide() {
                 />
               </div>
               {/* Circular floating icon on the bottom right curve, half outside */}
-              <div className={`absolute bottom-8 right-0 translate-x-1/2 w-10 h-10 rounded-full flex items-center justify-center shadow-md ${guide.themeColor} z-10`}>
+              <div className={`absolute bottom-3 sm:bottom-8 right-0 translate-x-1/2 w-4 h-4 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shadow-md ${guide.themeColor} z-10 text-[6px] sm:text-base`}>
                 {guide.icon}
               </div>
             </div>
             {/* Label below capsule */}
-            <h4 className="mt-6 font-semibold text-sm text-app-primary text-center leading-tight">
+            <h4 className="mt-2 sm:mt-6 font-semibold text-[7px] sm:text-sm text-app-primary text-center leading-tight truncate w-full px-1">
               {guide.title}
             </h4>
-            <p className="text-[10px] text-app-primary/40 uppercase tracking-widest mt-1">guide book</p>
+              <p className="text-[5px] sm:text-[10px] text-app-primary/40 uppercase tracking-widest mt-0.5 sm:mt-1">guide book</p>
+            </div>
           </div>
         ))}
       </div>
