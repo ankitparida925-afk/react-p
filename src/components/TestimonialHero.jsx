@@ -19,7 +19,7 @@ function TestimonialHero() {
   ];
 
   // 9 Columns containing exactly 13 images mapping to a U-shape
-  const columns = [
+  const desktopColumns = [
     { ghostTop: '-30%', img1Top: '5%', img2Top: '32%', images: [teamImages[0], teamImages[1]] },
     { ghostTop: '-40%', img1Top: '-5%', img2Top: '22%', images: [teamImages[2], teamImages[3]] },
     { ghostTop: '-25%', img1Top: '6%', images: [teamImages[4]] },
@@ -31,16 +31,22 @@ function TestimonialHero() {
     { ghostTop: '-30%', img1Top: '5%', img2Top: '32%', images: [teamImages[11], teamImages[12]] }, // Col 9
   ];
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+  // 5 Columns placing all 13 images ABOVE and BELOW the text on mobile (forming a ring)
+  const mobileColumns = [
+    { tops: ['4%', '18%', '82%'], images: [teamImages[0], teamImages[1], teamImages[2]] },
+    { tops: ['12%', '76%'], images: [teamImages[3], teamImages[4]] },
+    { tops: ['2%', '24%', '88%'], images: [teamImages[5], teamImages[6], teamImages[7]] }, // Center
+    { tops: ['12%', '76%'], images: [teamImages[8], teamImages[9]] },
+    { tops: ['4%', '18%', '82%'], images: [teamImages[10], teamImages[11], teamImages[12]] },
+  ];
 
   return (
     <section className="w-full flex-1 flex flex-col items-center justify-center text-center pt-12 sm:pt-24 pb-8 sm:pb-24 overflow-hidden relative">
       
-      {/* Arch Grid Section - Allowed to bleed off edges on tiny screens to keep images large */}
-      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] z-10">
-        {/* Mathematically perfectly centered grid wrapper */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] sm:w-[100vw] max-w-[1300px] h-full flex justify-between sm:justify-center gap-[2px] sm:gap-4 md:gap-6 px-1 sm:px-4">
-          {columns.map((col, idx) => {
+      {/* Arch Grid Section (DESKTOP ONLY) */}
+      <div className="hidden sm:block relative w-full h-[450px] md:h-[600px] z-10">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[1300px] h-full flex justify-center gap-4 md:gap-6 px-4">
+          {desktopColumns.map((col, idx) => {
             return (
               <div key={idx} className="relative w-[10.5%] h-full flex justify-center">
               {/* Faint Vertical track line */}
@@ -58,9 +64,9 @@ function TestimonialHero() {
               {col.images.map((imgUrl, imgIdx) => (
                 <div 
                   key={imgIdx}
-                  className="absolute w-full aspect-[4/5] rounded-xl md:rounded-2xl overflow-hidden shadow-lg shadow-black/5 bg-white animate-fall-from-left"
+                  className="absolute w-full aspect-[4/5] rounded-xl md:rounded-2xl overflow-hidden shadow-2xl shadow-black/10 transition-transform duration-700"
                   style={{ 
-                    top: imgIdx === 0 ? col.img1Top : `calc(${col.img2Top} + ${isMobile ? '10%' : '0%'})`, // Push second image down slightly on mobile to prevent overlap
+                    top: imgIdx === 0 ? col.img1Top : col.img2Top, 
                     animationDelay: `${idx * 100 + imgIdx * 200}ms`
                   }}
                 >
@@ -73,27 +79,55 @@ function TestimonialHero() {
         </div>
       </div>
 
-      {/* Text Content Area perfectly nesting inside the taller arch on mobile */}
-      <div className="max-w-4xl mx-auto px-4 flex flex-col items-center text-center relative z-20 -mt-40 sm:-mt-32 md:-mt-[22rem]">
+      {/* Ring Layout Section (MOBILE ONLY) */}
+      <div className="block sm:hidden relative w-full h-[800px] z-10 flex flex-col items-center justify-center">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-[500px] h-full flex justify-between gap-[4px] px-2">
+          {mobileColumns.map((col, idx) => {
+            return (
+              <div key={idx} className="relative w-[18%] h-full flex justify-center">
+              {/* Faint Vertical track line */}
+              <div className="absolute top-[-100px] bottom-[-200px] w-px bg-gradient-to-b from-transparent via-black/[0.04] to-transparent"></div>
+              
+              {/* Main Images */}
+              {col.images.map((imgUrl, imgIdx) => (
+                <div 
+                  key={imgIdx}
+                  className="absolute w-full aspect-[4/5] rounded-xl overflow-hidden shadow-2xl shadow-black/10 transition-transform duration-700"
+                  style={{ 
+                    top: col.tops[imgIdx], 
+                    animationDelay: `${idx * 100 + imgIdx * 200}ms`
+                  }}
+                >
+                  <img src={imgUrl} className="w-full h-full object-cover" alt={`Mobile Testimonial ${idx}-${imgIdx}`} />
+                </div>
+              ))}
+            </div>
+          );
+        })}
+        </div>
+      </div>
+
+      {/* Text Content Area - Centered inside mobile ring, nested inside desktop arch */}
+      <div className="absolute top-[55%] -translate-y-1/2 sm:static sm:translate-y-0 max-w-4xl mx-auto px-4 w-full flex flex-col items-center text-center z-20 sm:-mt-32 md:-mt-[22rem]">
         {/* Pill Badge */}
-        <div className="bg-black/5 text-[#121212] text-[8px] sm:text-xs font-semibold px-2 sm:px-4 py-1 sm:py-1.5 rounded-full mb-3 sm:mb-8">
+        <div className="bg-black/5 text-[#121212] text-[10px] sm:text-xs font-semibold px-3 sm:px-4 py-1.5 sm:py-1.5 rounded-full mb-3 sm:mb-8 backdrop-blur-sm">
           Testimonials
         </div>
         
         {/* Large Heading */}
-        <h2 className="text-xl sm:text-3xl md:text-5xl font-bold tracking-tight mb-2 sm:mb-6 leading-[1.1]">
+        <h2 className="text-3xl sm:text-3xl md:text-5xl font-bold tracking-tight mb-3 sm:mb-6 leading-[1.1]">
           <span className="text-[#121212]">Trusted by leaders</span><br />
           <span className="text-[#121212]/40">from various industries</span>
         </h2>
         
         {/* Subtext */}
-        <p className="text-[9px] md:text-base text-[#121212]/80 font-medium max-w-[250px] md:max-w-lg mx-auto mb-5 sm:mb-10 leading-snug sm:leading-relaxed">
+        <p className="text-xs md:text-base text-[#121212]/80 font-medium max-w-[280px] md:max-w-lg mx-auto mb-6 sm:mb-10 leading-snug sm:leading-relaxed">
           Learn why professionals trust our solutions to complete their customer journeys.
         </p>
         
         {/* Black Button */}
-        <button className="bg-[#121212] text-white px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full font-semibold text-[9px] sm:text-sm hover:scale-105 transition-transform flex items-center gap-1 sm:gap-2 shadow-xl shadow-black/10">
-          Read Success Stories <span className="text-[10px] sm:text-sm">→</span>
+        <button className="bg-[#121212] text-white px-5 sm:px-5 py-2.5 sm:py-2.5 rounded-full font-semibold text-xs sm:text-sm hover:scale-105 transition-transform flex items-center gap-2 shadow-xl shadow-black/10">
+          Read Success Stories <span className="text-xs sm:text-sm">→</span>
         </button>
       </div>
     </section>

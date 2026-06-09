@@ -350,7 +350,7 @@ function App() {
             <div className="animate-on-scroll opacity-0 translate-y-10 transition-all duration-1000 ease-out">
               <Hero setView={setView} />
             </div>
-            <div className="animate-on-scroll opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-200">
+            <div className="animate-on-scroll opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-200 -mt-16 sm:mt-0">
               <TeamCarousel />
             </div>
             <div className="animate-on-scroll opacity-0 translate-y-10 transition-all duration-1000 ease-out delay-300">
