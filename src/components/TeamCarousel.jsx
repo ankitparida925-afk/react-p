@@ -93,7 +93,12 @@ function TeamCarousel() {
     const handleResize = () => {
       if (typeof window !== 'undefined') {
         if (window.innerWidth < 1200) {
-          setScale(window.innerWidth / 1200);
+          let newScale = window.innerWidth / 1200;
+          // Boost scale heavily on mobile so images are large and immersive
+          if (window.innerWidth < 768) {
+            newScale *= 1.75;
+          }
+          setScale(newScale);
         } else {
           setScale(1);
         }

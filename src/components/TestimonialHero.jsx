@@ -34,13 +34,15 @@ function TestimonialHero() {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
 
   return (
-    <section className="w-full flex flex-col items-center text-center pt-12 sm:pt-24 pb-2 sm:pb-24 overflow-hidden relative">
+    <section className="w-full flex-1 flex flex-col items-center justify-center text-center pt-12 sm:pt-24 pb-8 sm:pb-24 overflow-hidden relative">
       
-      {/* Arch Grid Section - Exact miniature replica of Windows layout on all screens */}
-      <div className="relative w-full max-w-[1300px] h-[160px] sm:h-[450px] md:h-[600px] flex justify-between sm:justify-center gap-[2px] sm:gap-4 md:gap-6 px-1 sm:px-4 mx-auto z-10">
-        {columns.map((col, idx) => {
-          return (
-            <div key={idx} className="relative w-[10.5%] h-full flex justify-center">
+      {/* Arch Grid Section - Allowed to bleed off edges on tiny screens to keep images large */}
+      <div className="relative w-full h-[260px] sm:h-[450px] md:h-[600px] z-10">
+        {/* Mathematically perfectly centered grid wrapper */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[100vw] max-w-[1300px] h-full flex justify-between sm:justify-center gap-[2px] sm:gap-4 md:gap-6 px-1 sm:px-4">
+          {columns.map((col, idx) => {
+            return (
+              <div key={idx} className="relative w-[10.5%] h-full flex justify-center">
               {/* Faint Vertical track line */}
               <div className="absolute top-[-100px] bottom-[-200px] w-px bg-gradient-to-b from-transparent via-black/[0.04] to-transparent"></div>
               
@@ -68,10 +70,11 @@ function TestimonialHero() {
             </div>
           );
         })}
+        </div>
       </div>
 
-      {/* Text Content Area perfectly nesting inside the arch on all screens */}
-      <div className="max-w-4xl mx-auto px-4 flex flex-col items-center text-center relative z-20 -mt-16 sm:-mt-32 md:-mt-[22rem]">
+      {/* Text Content Area perfectly nesting inside the taller arch on mobile */}
+      <div className="max-w-4xl mx-auto px-4 flex flex-col items-center text-center relative z-20 -mt-24 sm:-mt-32 md:-mt-[22rem]">
         {/* Pill Badge */}
         <div className="bg-black/5 text-[#121212] text-[8px] sm:text-xs font-semibold px-2 sm:px-4 py-1 sm:py-1.5 rounded-full mb-3 sm:mb-8">
           Testimonials

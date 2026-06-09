@@ -344,7 +344,7 @@ function App() {
     <div className="min-h-screen bg-app-bg text-app-primary flex flex-col transition-all duration-300">
       <Header currentView={view} setView={setView} />
       
-      <main className="flex-grow">
+      <main className="flex-grow flex flex-col">
         {view === 'flowblox' && (
           <>
             <div className="animate-on-scroll opacity-0 translate-y-10 transition-all duration-1000 ease-out">
@@ -372,7 +372,7 @@ function App() {
         )}
 
         {view === 'testimonials' && (
-          <div className="animate-on-scroll opacity-0 translate-y-10 transition-all duration-1000 ease-out">
+          <div className="flex-1 flex flex-col animate-on-scroll opacity-0 translate-y-10 transition-all duration-1000 ease-out">
             <TestimonialHero />
           </div>
         )}
