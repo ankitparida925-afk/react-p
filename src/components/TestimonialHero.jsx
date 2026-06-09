@@ -37,9 +37,9 @@ function TestimonialHero() {
     <section className="w-full flex-1 flex flex-col items-center justify-center text-center pt-12 sm:pt-24 pb-8 sm:pb-24 overflow-hidden relative">
       
       {/* Arch Grid Section - Allowed to bleed off edges on tiny screens to keep images large */}
-      <div className="relative w-full h-[260px] sm:h-[450px] md:h-[600px] z-10">
+      <div className="relative w-full h-[300px] sm:h-[450px] md:h-[600px] z-10">
         {/* Mathematically perfectly centered grid wrapper */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] sm:w-[100vw] max-w-[1300px] h-full flex justify-between sm:justify-center gap-[2px] sm:gap-4 md:gap-6 px-1 sm:px-4">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] sm:w-[100vw] max-w-[1300px] h-full flex justify-between sm:justify-center gap-[2px] sm:gap-4 md:gap-6 px-1 sm:px-4">
           {columns.map((col, idx) => {
             return (
               <div key={idx} className="relative w-[10.5%] h-full flex justify-center">
@@ -74,7 +74,7 @@ function TestimonialHero() {
       </div>
 
       {/* Text Content Area perfectly nesting inside the taller arch on mobile */}
-      <div className="max-w-4xl mx-auto px-4 flex flex-col items-center text-center relative z-20 -mt-24 sm:-mt-32 md:-mt-[22rem]">
+      <div className="max-w-4xl mx-auto px-4 flex flex-col items-center text-center relative z-20 -mt-40 sm:-mt-32 md:-mt-[22rem]">
         {/* Pill Badge */}
         <div className="bg-black/5 text-[#121212] text-[8px] sm:text-xs font-semibold px-2 sm:px-4 py-1 sm:py-1.5 rounded-full mb-3 sm:mb-8">
           Testimonials
