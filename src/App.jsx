@@ -2,13 +2,15 @@ import React, { useEffect, useState } from 'react';
 import TeamCarousel from './components/TeamCarousel';
 import TestimonialHero from './components/TestimonialHero';
 import TravelGuide from './components/TravelGuide';
+import FlightBooking from './components/FlightBooking';
+import MilestoneCounterT from './components/MilestoneCounterT';
 
 // Navigation Header Component
 function Header({ currentView, setView }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="animate-fade-in-up flex flex-col px-4 sm:px-8 py-4 sm:py-6 max-w-7xl mx-auto w-full border-b border-app-primary/10 relative z-50 bg-app-bg">
+    <header className={`animate-fade-in-up flex flex-col px-4 sm:px-8 ${currentView === 'wedding' ? 'py-8 sm:py-16' : 'py-4 sm:py-6'} max-w-7xl mx-auto w-full border-b border-app-primary/10 relative z-50 bg-app-bg`}>
       <div className="flex justify-between items-center w-full">
         {/* Logo */}
         <div className="text-xl sm:text-2xl font-bold tracking-tight text-app-primary cursor-pointer z-10" onClick={() => { setView('flowblox'); setIsMobileMenuOpen(false); }}>
@@ -17,9 +19,10 @@ function Header({ currentView, setView }) {
         
         {/* Desktop Nav */}
         <div className="hidden md:flex gap-6 items-center text-sm font-medium opacity-80 absolute left-1/2 -translate-x-1/2">
-          <a href="#services" className="hover:opacity-100 transition-opacity">Services</a>
-          <a href="#features" className="hover:opacity-100 transition-opacity">Features</a>
-          <a href="#blog" className="hover:opacity-100 transition-opacity">Blog</a>
+          <a href="#services" className="hover:opacity-100 transition-opacity" onClick={() => setView('flowblox')}>Services</a>
+          <a href="#features" className="hover:opacity-100 transition-opacity" onClick={() => setView('flowblox')}>Features</a>
+          <a href="#flight-booking" className="hover:opacity-100 transition-opacity" onClick={() => setView('flight-booking')}>Book Flights</a>
+          <a href="#wedding" className="hover:opacity-100 transition-opacity" onClick={() => setView('wedding')}>Wedding</a>
           <a href="#about" className="hover:opacity-100 transition-opacity">About</a>
         </div>
         
@@ -55,7 +58,8 @@ function Header({ currentView, setView }) {
         <div className="flex flex-col gap-4 py-4 border-t border-app-primary/10 text-base font-medium">
           <a href="#services" className="hover:opacity-100 transition-opacity" onClick={() => setIsMobileMenuOpen(false)}>Services</a>
           <a href="#features" className="hover:opacity-100 transition-opacity" onClick={() => setIsMobileMenuOpen(false)}>Features</a>
-          <a href="#blog" className="hover:opacity-100 transition-opacity" onClick={() => setIsMobileMenuOpen(false)}>Blog</a>
+          <a href="#flight-booking" className="hover:opacity-100 transition-opacity" onClick={() => { setView('flight-booking'); setIsMobileMenuOpen(false); }}>Book Flights</a>
+          <a href="#wedding" className="hover:opacity-100 transition-opacity" onClick={() => { setView('wedding'); setIsMobileMenuOpen(false); }}>Wedding</a>
           <a href="#about" className="hover:opacity-100 transition-opacity" onClick={() => setIsMobileMenuOpen(false)}>About</a>
           <button 
             onClick={() => { setView('testimonials'); setIsMobileMenuOpen(false); }} 
@@ -92,6 +96,12 @@ function Hero({ setView }) {
           className="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-app-beige text-app-primary px-6 py-3.5 rounded-full hover:scale-105 transition-transform duration-300 font-medium text-sm"
         >
           Explore Travel Guide <span>✈</span>
+        </button>
+        <button 
+          onClick={() => setView('wedding')}
+          className="inline-flex w-full sm:w-auto justify-center items-center gap-2 bg-[#fbe7e8] text-app-primary px-6 py-3.5 rounded-full hover:scale-105 transition-transform duration-300 font-medium text-sm"
+        >
+          Wedding Milestones <span>💍</span>
         </button>
       </div>
     </section>
@@ -270,13 +280,13 @@ function ProvenResults() {
 // Footer Component
 function Footer() {
   return (
-    <footer className="bg-app-primary text-white py-4 sm:py-16 px-4 sm:px-8 mt-2 sm:mt-12">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-2 sm:gap-8">
-        <div className="text-center md:text-left">
-          <h3 className="text-base sm:text-2xl font-bold mb-0.5 sm:mb-2">Flowblox</h3>
-          <p className="text-[10px] sm:text-sm opacity-60 font-light">Streamlining teamwork since 2026.</p>
+    <footer className="bg-app-primary text-white py-3 sm:py-16 px-4 sm:px-8 mt-0 sm:mt-12">
+      <div className="max-w-7xl mx-auto flex flex-row justify-between items-center gap-2 sm:gap-8">
+        <div className="text-left">
+          <h3 className="text-sm sm:text-2xl font-bold mb-0 sm:mb-2">Flowblox</h3>
+          <p className="text-[8px] sm:text-sm opacity-60 font-light">Since 2026</p>
         </div>
-        <div className="flex gap-3 sm:gap-8 text-[10px] sm:text-sm opacity-80">
+        <div className="flex gap-3 sm:gap-8 text-[9px] sm:text-sm opacity-80">
           <a href="#privacy" className="hover:opacity-100 transition-opacity text-white">Privacy</a>
           <a href="#terms" className="hover:opacity-100 transition-opacity text-white">Terms</a>
           <a href="#github" className="hover:opacity-100 transition-opacity text-white">GitHub</a>
@@ -376,9 +386,21 @@ function App() {
             <TestimonialHero />
           </div>
         )}
+
+        {view === 'flight-booking' && (
+          <div className="flex-1 flex flex-col animate-fade-in-up">
+            <FlightBooking />
+          </div>
+        )}
+
+        {view === 'wedding' && (
+          <div className="flex-1 flex flex-col animate-fade-in-up relative">
+            <MilestoneCounterT />
+          </div>
+        )}
       </main>
       
-      <Footer />
+      {view !== 'wedding' && <Footer />}
     </div>
   );
 }
